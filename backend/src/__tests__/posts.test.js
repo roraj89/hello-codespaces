@@ -1,7 +1,35 @@
 import mongoose from 'mongoose'
-import { describe, expect, test } from '@jest/globals'
-import { createPost } from '../services/posts.js'
+import { describe, expect, test, beforeEach } from '@jest/globals'
+import { createPost, listAllPosts } from '../services/posts.js'
 import { Post } from '../db/models/post.js'
+
+const samplePosts = [
+  { title: 'Learning Redux', author: 'Daniel Bugl', tags: ['redux'] },
+  { title: 'Learn React Hooks', author: 'Daniel Bugl', tags: ['react'] },
+  {
+    title: 'Full-Stack React Projects',
+    author: 'Daniel Bugl',
+    tags: ['react', 'nodejs'],
+  },
+  { title: 'Guide to TypeScript' },
+]
+
+let createdSamplePosts = []
+beforeEach(async () => {
+  await Post.deleteMany({})
+  createdSamplePosts = []
+  for (const post of samplePosts) {
+    const createdPost = new Post(post)
+    createdSamplePosts.push(await createdPost.save())
+  }
+})
+
+describe('listing posts', () => {
+  test('should return all posts', async () => {
+    const posts = await listAllPosts()
+    expect(posts.length).toEqual(createdSamplePosts.length)
+  })
+})
 
 describe('creating posts', () => {
   test('with all parameters should succeed', async () => {

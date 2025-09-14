@@ -13,3 +13,11 @@ async function listPosts(
 export async function listAllPosts(options) {
   return await listPosts({}, options)
 }
+
+export async function listPostsByAuthor(author, options) {
+  return await listPosts({ author }, options)
+}
+
+export async function listPostsByTag(tags, options) {
+  return await listPosts({ tags }, options)
+}
